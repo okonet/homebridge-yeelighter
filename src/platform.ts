@@ -57,7 +57,7 @@ export class YeelighterPlatform implements DynamicPlatformPlugin {
    */
   configureAccessory(accessory: PlatformAccessory) {
     if (this.accessories.find(a => a.UUID === accessory.UUID)) {
-      this.log.warn(`Ingnoring duplicate accessory from cache: ${accessory.displayName} (${accessory.context?.device?.model || "unknown"})`);
+      this.log.warn(`Ignoring duplicate accessory from cache: ${accessory.displayName} (${accessory.context?.device?.model || "unknown"})`);
       return;
     }
     this.log.info(`Loading accessory from cache: ${accessory.displayName} (${accessory.context?.device?.model || "unknown"})`);
@@ -75,9 +75,9 @@ export class YeelighterPlatform implements DynamicPlatformPlugin {
       const overrideConfig: OverrideLightConfiguration | undefined = override.find(
         item => item.id === detectedInfo.id,
       );
-      const separateAmbient = ((this.config?.split && overrideConfig?.separateAmbient !== false) || overrideConfig?.separateAmbient === true) 
+      const separateAmbient = ((this.config?.split && overrideConfig?.separateAmbient !== false) || overrideConfig?.separateAmbient === true)
         && (detectedInfo.support.includes("bg_set_power") || !!overrideConfig?.backgroundLight);
-      
+
       const newDeviceInfo: DeviceInfo = {
         ...detectedInfo,
         trackedAttributes,
@@ -103,7 +103,7 @@ export class YeelighterPlatform implements DynamicPlatformPlugin {
             this.log.info("Removing ignored accessory from cache:", existingAccessory.displayName);
             purgeList.push(existingAccessory);
           }
-          const existingAmbientAccessory = this.accessories.find(accessory => accessory.UUID === ambientUuid);            
+          const existingAmbientAccessory = this.accessories.find(accessory => accessory.UUID === ambientUuid);
           if (existingAmbientAccessory) {
             purgeList.push(existingAmbientAccessory);
             this.log.info("Removing ignored ambient accessory from cache:", existingAmbientAccessory.displayName);
@@ -118,7 +118,7 @@ export class YeelighterPlatform implements DynamicPlatformPlugin {
               })
               this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, purgeList);
             } catch (error) {
-              this.log.warn("Failed to unregister", purgeList, error);          
+              this.log.warn("Failed to unregister", purgeList, error);
             }
           }
           return;
@@ -145,7 +145,7 @@ export class YeelighterPlatform implements DynamicPlatformPlugin {
         }
         ambientAccessory = undefined;
       }
-      
+
       if (existingAccessory) {
         // the accessory already exists
         if (device) {
@@ -157,7 +157,7 @@ export class YeelighterPlatform implements DynamicPlatformPlugin {
           if (!ambientAccessory && separateAmbient) {
             ambientAccessory = new this.api.platformAccessory(newDeviceInfo.id, ambientUuid);
             ambientAccessory.context.device = newDeviceInfo;
-            this.log.info(`Separate Ambient Accessory created with UUID ${ambientUuid}`);  
+            this.log.info(`Separate Ambient Accessory created with UUID ${ambientUuid}`);
             // link the accessory to your platform
             this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [ambientAccessory]);
             updateAccessories.push(ambientAccessory);
